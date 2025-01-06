@@ -63,7 +63,6 @@ def get_data_range(df,netcdf_dir,n_draws=20):
     pulls   = np.random.randint(0,len(df),n_draws)
     files   = [netcdf_dir/df['file'][i] for i in pulls]
     ref     = xr.open_dataset(netcdf_dir/df['file'][0])
-    print(files)
     maxes   = [get_max(file,ref) for file in files]
     data_range = [0, max(maxes)]
     return ref, data_range
