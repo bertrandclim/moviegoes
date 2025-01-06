@@ -8,6 +8,8 @@ import click
 import argparse, os
 from pathlib import Path
 import subprocess
+import multiprocessing
+from itertools import repeat
 
 from dask.distributed import Client, progress, LocalCluster 
 import dask.bag as db
@@ -54,13 +56,18 @@ def create_case_name(domain,satellite,start_time,num_hours,bands,cmap,res,scale)
     name += f"_{res}{scale:.1f}x"
     return name
 
+def get_max(f,ref,name='Rad'):
+    '''quick open dataset and get max value of variable'''
+    return xr.open_dataset(f,drop_variables=set(ref).difference([name]))[name].max().item(0)
+
 def get_data_range(df,netcdf_dir,n_draws=20):
     '''guess a consistent colorbar range - checking every file is too slow'''
     pulls   = np.random.randint(0,len(df),n_draws)
-    files   = db.from_sequence([netcdf_dir/df['file'][i] for i in pulls])
+    files   = [netcdf_dir/df['file'][i] for i in pulls]
     ref     = xr.open_dataset(netcdf_dir/df['file'][0])
-    maxes   = files.map(lambda f: xr.open_dataset(f,drop_variables=set(ref).difference(['Rad']))['Rad'].max().item(0))
-    data_range = [0, max(maxes.compute())]
+    print(files)
+    maxes   = [get_max(file,ref) for file in files]
+    data_range = [0, max(maxes)]
     return ref, data_range
 
 def log_order_size(df, max_order_size=20e9): #bytes
@@ -123,15 +130,7 @@ def cli(netcdf_dir,render_dir,start_time,num_hours,satellite,domain,bands,cmap,f
     ###############################
 
     #defaults
-    n_cores = 8 #local cpu cores
-    threads_per_worker = 1 #tasks per core
-
-    #make local cluster for parallelization
-    cluster = LocalCluster(n_workers=n_cores, 
-            threads_per_worker=threads_per_worker)
-    client = Client(cluster)
-    print(f'initialized dask cluster with {n_cores} workers and {threads_per_worker} threads per worker.')
-    print(f'View the cluster at {client.dashboard_link}')
+    n_cores = multiprocessing.cpu_count() #local cpu cores
     
     #parse parameters
     name = create_case_name(domain,satellite,start_time,num_hours,bands,cmap,res,scale)
@@ -166,7 +165,7 @@ def cli(netcdf_dir,render_dir,start_time,num_hours,satellite,domain,bands,cmap,f
     for i, kind in enumerate(kinds):
         #get files with the same scan domain
         files     = netcdf_dir/df['file'][which==i]
-        files_bag = db.from_sequence(files,partition_size=10) 
+
         #make output directory, or if it exists but is empty
         name_i = f'{name}_pt{i}'
         try:
@@ -178,12 +177,17 @@ def cli(netcdf_dir,render_dir,start_time,num_hours,satellite,domain,bands,cmap,f
             except:
                 print(f'{render_dir/name_i} not empty! Skipping...')
                 continue
-        #plot
+
         frame_nums = {str(filepath):i for i,filepath in enumerate(files)}
-        results = files_bag.map(plot,frame_nums,render_dir/name_i,ref,
-                                res,data_range,cmap).compute()
-        #flush worker memory
-        #client.restart()
+        pool    = multiprocessing.Pool(n_cores-1)
+        #parallelize
+        #syntax from stackoverflow.com/questions/5442910
+        results = pool.starmap(plot,zip(files, repeat(frame_nums), repeat(render_dir/name_i), 
+                                        repeat(ref),repeat(res), repeat(data_range),
+                                        repeat(cmap)), chunksize=10)
+        #close the pool and wait for the work to finish
+        pool.close()
+        pool.join()
         print(f'🎥 finished part {i+1} of {len(kinds)}: {sum(results)}/{len(files)} frames failed.')
 
     #transcode videos
