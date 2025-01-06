@@ -11,8 +11,6 @@ import subprocess
 import multiprocessing
 from itertools import repeat
 
-from dask.distributed import Client, progress, LocalCluster 
-import dask.bag as db
 import s3fs
 from goes2go.data import goes_timerange
 from goes2go.accessors import fieldOfViewAccessor as fov
