@@ -19,7 +19,12 @@ Replacing `pipx` with `pip` should work too -- `pipx` is just more convenient be
 ## Usage
 1. `moviegoes --help`
 
-Arguments to the script specify which GOES data to get (time range, east vs. west, satellite domain, wavelength channel) and how to turn it into a .mp4 animation (colormap, frames per second, resolution, aspect ratio). Included colormaps are all [matplotlib defaults](https://matplotlib.org/stable/users/explain/colors/colormaps.html) as well as their reversed variants by appending `_r` (e.g. `viridis_r` is reversed `viridis`).
+Arguments to the script specify:
+* which GOES data to get (time range, east vs. west, satellite domain, wavelength channel),
+* how to turn it into a .mp4 animation (colormap, frames per second, resolution, aspect ratio), and
+* where to save the output and where to cache input data. Either create the paths `~/Documents/noaa_data/goes` (cache) and `~/Documents/goes_animations` (output) or specify `--cache` and `--output`.
+
+Included colormaps are all [matplotlib defaults](https://matplotlib.org/stable/users/explain/colors/colormaps.html) as well as their reversed variants by appending `_r` (e.g. `viridis_r` is reversed `viridis`).
 
 ## Examples
 You can see some cloud movies created with this tool [here](https://drive.google.com/drive/folders/1ala5VyGoitclJU_pgovGzn5MDU8LRa8O?usp=sharing). Some of the commands used for the examples:
