@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 click = "^8.1.8"
-dask = "~2024.12.1"
+dask[complete] = "~2024.12.1"
 goes2go = "^2024.7.0"
 matplotlib = "~3.10"
 numpy = "^2.2.1"
