@@ -1,5 +1,5 @@
-![gallery](https://github.com/bertrandclim/moviegoes/blob/main/imgs/hurricane.gif?raw=true)
 # moviegoes
+![gallery](https://github.com/bertrandclim/moviegoes/blob/main/imgs/hurricane.gif?raw=true)<br>
 Python command line utility for making animations from GOES satellite imagery.
 
 ## Dependencies
