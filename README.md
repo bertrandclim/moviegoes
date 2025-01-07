@@ -3,7 +3,7 @@ Python command line utility for making animations from GOES satellite imagery.<b
 
 
 ![gallery](https://github.com/bertrandclim/moviegoes/blob/main/imgs/hurricane.gif?raw=true)<br>
-_20-hour loop of Hurricane Bonnie_
+_Hurricane Bonnie_
 
 ## Dependencies
 Python library dependencies are handled automatically by pip/pipx/etc. An additional dependency (`ffmpeg`) __must be installed manually__.
