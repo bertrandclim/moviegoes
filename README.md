@@ -1,4 +1,6 @@
-Python package for making animations from GOES satellite imagery.
+# moviegoes
+![gallery](https://github.com/bertrandclim/moviegoes/blob/main/imgs/hurricane.gif?raw=true)
+Python command line utility for making animations from GOES satellite imagery.
 
 ## Dependencies
 Python library dependencies are handled automatically by pip/pipx/etc. An additional dependency (`ffmpeg`) __must be installed manually__.
