@@ -32,6 +32,6 @@ Arguments to the script specify:
 Included colormaps are all [matplotlib defaults](https://matplotlib.org/stable/users/explain/colors/colormaps.html) as well as their reversed variants by appending `_r` (e.g. `viridis_r` is reversed `viridis`).
 
 ## Examples
-You can see some cloud movies created with this tool [here](https://drive.google.com/drive/folders/1ala5VyGoitclJU_pgovGzn5MDU8LRa8O?usp=sharing). Some of the commands used for the examples:
+You can see some cloud movies created with this tool [here](https://drive.google.com/drive/folders/1-hjqI-VZdboaNUtN27bgXjwqL6Uc7GpL?usp=drive_link) and [here](https://drive.google.com/drive/folders/1ala5VyGoitclJU_pgovGzn5MDU8LRa8O?usp=sharing). Some of the commands used for the examples:
 * `moviegoes --start "2022-09-04 08:00" --hours 4 --sat EAST --band 16 --colors gist_stern --res native --scale 2`
 * `moviegoes --start "2022-07-04 13:00" --hours 24 --sat EAST --band 11 --colors gray_r --res native --scale 2`
